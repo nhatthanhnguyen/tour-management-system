@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.ptithcm.tour.utils.Constants.NOT_FOUND_BY_ID_RESPONSE;
+import static com.ptithcm.tour.utils.Constants.NOT_FOUND_RESPONSE;
 
 @Service
 public class LoaiTaiKhoanServiceImpl implements LoaiTaiKhoanService {
@@ -34,7 +34,7 @@ public class LoaiTaiKhoanServiceImpl implements LoaiTaiKhoanService {
     public LoaiTaiKhoanResponseDTO getById(Long id) {
         return loaiTaiKhoanMapper.toResponseDTO(
                 loaiTaiKhoanRepository.findById(id).orElseThrow(
-                        () -> new NotFoundException(String.format(NOT_FOUND_BY_ID_RESPONSE, "Loại tài khoản", "Mã loại tài khoản", id))
+                        () -> new NotFoundException(String.format(NOT_FOUND_RESPONSE, "Loại tài khoản", "Mã loại tài khoản", id))
                 )
         );
     }
@@ -45,7 +45,7 @@ public class LoaiTaiKhoanServiceImpl implements LoaiTaiKhoanService {
         Long id = loaiTaiKhoanRequestDTO.getMaLoaiTK();
         if (id != null) {
             loaiTaiKhoan = loaiTaiKhoanRepository.findById(id).orElseThrow(
-                    () -> new NotFoundException(String.format(NOT_FOUND_BY_ID_RESPONSE, "Loại tài khoản", "Mã loại tài khoản", id))
+                    () -> new NotFoundException(String.format(NOT_FOUND_RESPONSE, "Loại tài khoản", "Mã loại tài khoản", id))
             );
         }
         BeanUtils.copyProperties(loaiTaiKhoanRequestDTO, loaiTaiKhoan, "id");

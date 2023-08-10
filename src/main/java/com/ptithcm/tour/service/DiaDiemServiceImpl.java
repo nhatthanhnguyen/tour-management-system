@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.ptithcm.tour.utils.Constants.NOT_FOUND_BY_ID_RESPONSE;
+import static com.ptithcm.tour.utils.Constants.NOT_FOUND_RESPONSE;
 
 @Service
 public class DiaDiemServiceImpl implements DiaDiemService {
@@ -54,7 +54,7 @@ public class DiaDiemServiceImpl implements DiaDiemService {
     public DiaDiemResponseDTO getById(Long id) {
         return diaDiemMapper.toResponseDTO(
                 diaDiemRepository.findById(id).orElseThrow(
-                        () -> new NotFoundException(String.format(NOT_FOUND_BY_ID_RESPONSE, "Địa điểm", "Mã địa điểm", id))
+                        () -> new NotFoundException(String.format(NOT_FOUND_RESPONSE, "Địa điểm", "Mã địa điểm", id))
                 )
         );
     }
@@ -65,7 +65,7 @@ public class DiaDiemServiceImpl implements DiaDiemService {
         Long id = diaDiemRequestDTO.getMaDiaDiem();
         if (id != null) {
             diaDiem = diaDiemRepository.findById(diaDiemRequestDTO.getMaDiaDiem())
-                    .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_BY_ID_RESPONSE, "Địa điểm", "Mã địa điểm", id)));
+                    .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_RESPONSE, "Địa điểm", "Mã địa điểm", id)));
         }
         BeanUtils.copyProperties(diaDiemRequestDTO, diaDiem, "id");
         diaDiem = diaDiemRepository.save(diaDiem);

@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.ptithcm.tour.utils.Constants.NOT_FOUND_BY_ID_RESPONSE;
+import static com.ptithcm.tour.utils.Constants.NOT_FOUND_RESPONSE;
 
 @Service
 public class LoaiTourServiceImpl implements LoaiTourService {
@@ -34,7 +34,7 @@ public class LoaiTourServiceImpl implements LoaiTourService {
     public LoaiTourResponseDTO getById(Long id) {
         return loaiTourMapper.toResponseDTO(
                 loaiTourRepository.findById(id).orElseThrow(
-                        () -> new NotFoundException(String.format(NOT_FOUND_BY_ID_RESPONSE, "Loại tour", "Mã loại tour", id))
+                        () -> new NotFoundException(String.format(NOT_FOUND_RESPONSE, "Loại tour", "Mã loại tour", id))
                 )
         );
     }
@@ -45,7 +45,7 @@ public class LoaiTourServiceImpl implements LoaiTourService {
         Long id = loaiTourRequestDTO.getMaLoaiTour();
         if (id != null) {
             loaiTour = loaiTourRepository.findById(id).orElseThrow(
-                    () -> new NotFoundException(String.format(NOT_FOUND_BY_ID_RESPONSE, "Loại tour", "Mã loại tour", id))
+                    () -> new NotFoundException(String.format(NOT_FOUND_RESPONSE, "Loại tour", "Mã loại tour", id))
             );
         }
         BeanUtils.copyProperties(loaiTourRequestDTO, loaiTour, "id");

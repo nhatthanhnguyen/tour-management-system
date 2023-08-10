@@ -16,4 +16,13 @@ public class GlobalHandlerException {
                 .message(ex.getMessage())
                 .build();
     }
+
+    @ExceptionHandler(BadCredentialException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public MessageResponseDTO handleBadCredentialException(BadCredentialException ex) {
+        return MessageResponseDTO.builder()
+                .code(HttpStatus.FORBIDDEN.value())
+                .message(ex.getMessage())
+                .build();
+    }
 }
