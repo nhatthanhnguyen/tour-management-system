@@ -6,6 +6,7 @@ import com.ptithcm.tour.dto.request.TourRequestDTO;
 import com.ptithcm.tour.dto.response.PageDataDTO;
 import com.ptithcm.tour.dto.response.TourResponseDTO;
 import com.ptithcm.tour.service.TourService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +41,7 @@ public class TourController {
     }
 
     @PostMapping
+    @SecurityRequirement(name = "bearer")
     public TourResponseDTO save(@RequestBody TourRequestDTO tourRequestDTO) {
         return tourService.save(tourRequestDTO);
     }

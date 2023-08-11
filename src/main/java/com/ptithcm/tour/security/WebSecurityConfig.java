@@ -84,8 +84,7 @@ public class WebSecurityConfig {
                                 "/webjars/**",
                                 "/swagger-ui.html"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/diaDiem/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/loaiTour/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider());
         http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
