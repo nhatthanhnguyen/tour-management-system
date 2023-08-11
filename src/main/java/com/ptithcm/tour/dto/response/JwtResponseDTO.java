@@ -1,4 +1,4 @@
-package com.ptithcm.tour.dto.request;
+package com.ptithcm.tour.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LoginRequestDTO {
-    private String username;
-    private String password;
+public class JwtResponseDTO {
+    private String accessToken;
 }

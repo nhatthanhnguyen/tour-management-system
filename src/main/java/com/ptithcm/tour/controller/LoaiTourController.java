@@ -6,6 +6,7 @@ import com.ptithcm.tour.dto.request.PageLinkDTO;
 import com.ptithcm.tour.dto.response.LoaiTourResponseDTO;
 import com.ptithcm.tour.dto.response.PageDataDTO;
 import com.ptithcm.tour.service.LoaiTourService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +41,7 @@ public class LoaiTourController {
     }
 
     @PostMapping
+    @SecurityRequirement(name = "bearer")
     public LoaiTourResponseDTO save(@RequestBody LoaiTourRequestDTO loaiTourRequestDTO) {
         return loaiTourService.save(loaiTourRequestDTO);
     }

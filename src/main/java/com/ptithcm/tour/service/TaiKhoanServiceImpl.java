@@ -2,17 +2,24 @@ package com.ptithcm.tour.service;
 
 import com.ptithcm.tour.dto.request.LoginRequestDTO;
 import com.ptithcm.tour.dto.request.TaiKhoanRequestDTO;
-import com.ptithcm.tour.dto.response.TaiKhoanResponseDTO;
+import com.ptithcm.tour.dto.response.JwtResponseDTO;
+import com.ptithcm.tour.dto.response.MessageResponseDTO;
 import com.ptithcm.tour.exception.BadCredentialException;
 import com.ptithcm.tour.exception.NotFoundException;
-import com.ptithcm.tour.mapper.LoaiTaiKhoanMapper;
 import com.ptithcm.tour.mapper.TaiKhoanMapper;
 import com.ptithcm.tour.model.LoaiTaiKhoan;
 import com.ptithcm.tour.model.TaiKhoan;
 import com.ptithcm.tour.repository.LoaiTaiKhoanRepository;
 import com.ptithcm.tour.repository.TaiKhoanRepository;
+import com.ptithcm.tour.security.jwt.JwtUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static com.ptithcm.tour.utils.Constants.NOT_FOUND_RESPONSE;
@@ -26,37 +33,43 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
     private LoaiTaiKhoanRepository loaiTaiKhoanRepository;
 
     @Autowired
+    private PasswordEncoder encoder;
+
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private AuthenticationProvider authenticationProvider;
+
+    @Autowired
     private TaiKhoanMapper taiKhoanMapper;
 
     @Override
-    public TaiKhoanResponseDTO login(LoginRequestDTO loginRequestDTO) {
-        String sdt = loginRequestDTO.getSdt();
-        TaiKhoan taiKhoan = taiKhoanRepository.getTaiKhoansBySdt(sdt)
-                .orElseThrow(
-                        () -> new NotFoundException(String.format(NOT_FOUND_RESPONSE, "Tài khoản", "Số điện thoại", sdt)
-                        )
-                );
-        if (!taiKhoan.getMatKhau().equals(loginRequestDTO.getPassword())) {
-            throw new BadCredentialException("Tài khoản hoặc mật khẩu bị sai");
-        }
-        return taiKhoanMapper.toResponseDTO(taiKhoan);
+    public JwtResponseDTO login(LoginRequestDTO loginRequestDTO) {
+        Authentication authentication = authenticationProvider.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequestDTO.getUsername(), loginRequestDTO.getPassword())
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
+        return JwtResponseDTO.builder()
+                .accessToken(jwt).build();
     }
 
     @Override
-    public TaiKhoanResponseDTO register(TaiKhoanRequestDTO taiKhoanRequestDTO) {
-        String sdt = taiKhoanRequestDTO.getSdt();
-        TaiKhoan foundTaiKhoan = taiKhoanRepository.getTaiKhoansBySdt(sdt).orElse(null);
-        if (foundTaiKhoan != null) {
-            throw new BadCredentialException("Số điện thoại đã có người sử dụng");
+    public MessageResponseDTO register(TaiKhoanRequestDTO taiKhoanRequestDTO) {
+        if (taiKhoanRepository.existsBySdt(taiKhoanRequestDTO.getSdt())) {
+            throw new BadCredentialException("Số điện thoại đã được đăng ký");
         }
+        LoaiTaiKhoan loaiTaiKhoan = loaiTaiKhoanRepository.findById(taiKhoanRequestDTO.getMaLoaiTaiKhoan())
+                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_RESPONSE, "Loại tài khoản", "Mã loại tài khoản", taiKhoanRequestDTO.getMaLoaiTaiKhoan())));
         TaiKhoan taiKhoan = new TaiKhoan();
-        Long maLoaiTaiKhoan = taiKhoanRequestDTO.getMaLoaiTaiKhoan();
-        LoaiTaiKhoan loaiTaiKhoan = loaiTaiKhoanRepository
-                .findById(maLoaiTaiKhoan)
-                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_RESPONSE, "Loại tài khoản", "Mã loại tài khoản", maLoaiTaiKhoan)));
-        BeanUtils.copyProperties(taiKhoanRequestDTO, taiKhoan, "maLoaiTaiKhoan");
+        BeanUtils.copyProperties(taiKhoanRequestDTO, taiKhoan, "maLoaiTaiKhoan", "matKhau");
         taiKhoan.setLoaiTaiKhoan(loaiTaiKhoan);
-        taiKhoan = taiKhoanRepository.save(taiKhoan);
-        return taiKhoanMapper.toResponseDTO(taiKhoan);
+        taiKhoan.setMatKhau(encoder.encode(taiKhoanRequestDTO.getMatKhau()));
+        taiKhoanRepository.save(taiKhoan);
+        return MessageResponseDTO.builder()
+                .code(HttpStatus.OK.value())
+                .message("Tạo tài khoản thành công")
+                .build();
     }
 }

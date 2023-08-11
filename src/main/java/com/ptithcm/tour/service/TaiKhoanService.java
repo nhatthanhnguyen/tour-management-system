@@ -2,10 +2,11 @@ package com.ptithcm.tour.service;
 
 import com.ptithcm.tour.dto.request.LoginRequestDTO;
 import com.ptithcm.tour.dto.request.TaiKhoanRequestDTO;
-import com.ptithcm.tour.dto.response.TaiKhoanResponseDTO;
+import com.ptithcm.tour.dto.response.JwtResponseDTO;
+import com.ptithcm.tour.dto.response.MessageResponseDTO;
 
 public interface TaiKhoanService {
-    TaiKhoanResponseDTO login(LoginRequestDTO loginRequestDTO);
+    JwtResponseDTO login(LoginRequestDTO loginRequestDTO);
 
-    TaiKhoanResponseDTO register(TaiKhoanRequestDTO taiKhoanRequestDTO);
+    MessageResponseDTO register(TaiKhoanRequestDTO taiKhoanRequestDTO);
 }

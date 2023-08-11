@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, Long> {
-    Optional<TaiKhoan> getTaiKhoansBySdt(String sdt);
+    Optional<TaiKhoan> getTaiKhoanBySdt(String sdt);
+    Boolean existsBySdt(String sdt);
 }

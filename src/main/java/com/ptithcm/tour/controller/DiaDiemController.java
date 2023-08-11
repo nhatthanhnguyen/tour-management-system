@@ -6,6 +6,10 @@ import com.ptithcm.tour.dto.request.PageLinkDTO;
 import com.ptithcm.tour.dto.response.DiaDiemResponseDTO;
 import com.ptithcm.tour.dto.response.PageDataDTO;
 import com.ptithcm.tour.service.DiaDiemService;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +44,7 @@ public class DiaDiemController {
     }
 
     @PostMapping
+    @SecurityRequirement(name = "bearer")
     public DiaDiemResponseDTO save(@RequestBody DiaDiemRequestDTO diaDiemRequestDTO) {
         return diaDiemService.save(diaDiemRequestDTO);
     }
