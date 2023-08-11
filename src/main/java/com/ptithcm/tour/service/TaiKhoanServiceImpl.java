@@ -4,6 +4,7 @@ import com.ptithcm.tour.dto.request.LoginRequestDTO;
 import com.ptithcm.tour.dto.request.TaiKhoanRequestDTO;
 import com.ptithcm.tour.dto.response.JwtResponseDTO;
 import com.ptithcm.tour.dto.response.MessageResponseDTO;
+import com.ptithcm.tour.dto.response.TaiKhoanResponseDTO;
 import com.ptithcm.tour.exception.BadCredentialException;
 import com.ptithcm.tour.exception.NotFoundException;
 import com.ptithcm.tour.mapper.TaiKhoanMapper;
@@ -15,6 +16,7 @@ import com.ptithcm.tour.security.jwt.JwtUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -71,5 +73,24 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
                 .code(HttpStatus.OK.value())
                 .message("Tạo tài khoản thành công")
                 .build();
+    }
+
+    @Override
+    public TaiKhoanResponseDTO getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String currentUsername = authentication.getName();
+            return taiKhoanMapper.toResponseDTO(
+                    taiKhoanRepository.getTaiKhoanBySdt(currentUsername).orElseThrow(
+                            () -> new NotFoundException(String.format(
+                                    NOT_FOUND_RESPONSE,
+                                    "Tài khoản",
+                                    "Số điện thoại",
+                                    currentUsername
+                            ))
+                    )
+            );
+        }
+        return null;
     }
 }
