@@ -73,9 +73,16 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/auth/**",
-                                "/swagger-ui/**",
+                                "/v2/api-docs",
+                                "/v3/api-docs",
                                 "/v3/api-docs/**",
-                                "/v2/api-docs/**"
+                                "/swagger-resources",
+                                "/swagger-resources/**",
+                                "/configuration/ui",
+                                "/configuration/security",
+                                "/swagger-ui/**",
+                                "/webjars/**",
+                                "/swagger-ui.html"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/diaDiem/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/loaiTour/**").permitAll()
