@@ -3,6 +3,7 @@ package com.ptithcm.tour.service;
 import com.ptithcm.tour.dto.request.LinkDTO;
 import com.ptithcm.tour.dto.request.PageLinkDTO;
 import com.ptithcm.tour.dto.request.TourRequestDTO;
+import com.ptithcm.tour.dto.response.MessageResponseDTO;
 import com.ptithcm.tour.dto.response.PageDataDTO;
 import com.ptithcm.tour.dto.response.TourResponseDTO;
 import com.ptithcm.tour.exception.NotFoundException;
@@ -80,5 +81,14 @@ public class TourServiceImpl implements TourService {
                         () -> new NotFoundException(String.format(NOT_FOUND_RESPONSE, "Tour", "Mã tour", id))
                 )
         );
+    }
+
+    @Override
+    public MessageResponseDTO deleteTour(Long id) {
+        tourRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("Không tìm thấy Tour có mã Tour là %s", id)));
+        tourRepository.deleteById(id);
+        return new MessageResponseDTO(200, "Xóa Tour thành công");
     }
 }

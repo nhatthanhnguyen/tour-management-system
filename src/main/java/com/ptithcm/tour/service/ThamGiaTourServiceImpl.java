@@ -1,6 +1,7 @@
 package com.ptithcm.tour.service;
 
 import com.ptithcm.tour.dto.request.ThamGiaTourRequestDTO;
+import com.ptithcm.tour.dto.response.MessageResponseDTO;
 import com.ptithcm.tour.dto.response.ThamGiaTourResponseDTO;
 import com.ptithcm.tour.exception.BadCredentialException;
 import com.ptithcm.tour.exception.NotFoundException;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.ptithcm.tour.utils.Constants.NOT_FOUND_RESPONSE;
@@ -105,5 +107,33 @@ public class ThamGiaTourServiceImpl implements ThamGiaTourService {
                 .stream()
                 .map(o -> thamGiaTourMapper.toResponseDTO(o))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public MessageResponseDTO deleteThamGiaTourById(Long sttThamGia) {
+        String username = Helpers.getCurrentUsername();
+        if (username == null) {
+            throw new BadCredentialException("Tài khoản chưa được login");
+        }
+        TaiKhoan taiKhoan = taiKhoanRepository.getTaiKhoanBySdt(username)
+                .orElseThrow(() -> new NotFoundException(String.format(
+                        NOT_FOUND_RESPONSE,
+                        "Tài khoản",
+                        "Số điện thoại",
+                        username
+                )));
+        ThamGiaTour thamGiaTour = thamGiaTourRepository
+                .findById(sttThamGia)
+                .orElseThrow(() -> new NotFoundException(String.format(
+                        NOT_FOUND_RESPONSE,
+                        "Tham gia tour",
+                        "Số thứ tự tham gia",
+                        sttThamGia
+                )));
+        if (!Objects.equals(thamGiaTour.getTaiKhoan().getId(), taiKhoan.getId())) {
+            throw new BadCredentialException("Bạn không có quyền xóa");
+        }
+        thamGiaTourRepository.deleteById(sttThamGia);
+        return new MessageResponseDTO(200, "Xóa tham gia Tour thành công");
     }
 }

@@ -3,6 +3,7 @@ package com.ptithcm.tour.service;
 import com.ptithcm.tour.dto.request.LinkDTO;
 import com.ptithcm.tour.dto.request.PageLinkDTO;
 import com.ptithcm.tour.dto.request.TourRequestDTO;
+import com.ptithcm.tour.dto.response.MessageResponseDTO;
 import com.ptithcm.tour.dto.response.PageDataDTO;
 import com.ptithcm.tour.dto.response.TourResponseDTO;
 
@@ -16,4 +17,6 @@ public interface TourService {
     TourResponseDTO save(TourRequestDTO tourRequestDTO);
 
     TourResponseDTO getById(Long id);
+
+    MessageResponseDTO deleteTour(Long id);
 }

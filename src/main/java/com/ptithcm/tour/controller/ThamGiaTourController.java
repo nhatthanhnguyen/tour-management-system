@@ -1,6 +1,7 @@
 package com.ptithcm.tour.controller;
 
 import com.ptithcm.tour.dto.request.ThamGiaTourRequestDTO;
+import com.ptithcm.tour.dto.response.MessageResponseDTO;
 import com.ptithcm.tour.dto.response.ThamGiaTourResponseDTO;
 import com.ptithcm.tour.service.ThamGiaTourService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -32,5 +33,11 @@ public class ThamGiaTourController {
     @SecurityRequirement(name = "bearer")
     public List<ThamGiaTourResponseDTO> getByMe() {
         return thamGiaTourService.getThamGiaTourByUser();
+    }
+
+    @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "bearer")
+    public MessageResponseDTO delete(@PathVariable("id") Long id) {
+        return thamGiaTourService.deleteThamGiaTourById(id);
     }
 }

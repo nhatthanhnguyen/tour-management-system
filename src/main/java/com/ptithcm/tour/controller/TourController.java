@@ -3,6 +3,7 @@ package com.ptithcm.tour.controller;
 import com.ptithcm.tour.dto.request.LinkDTO;
 import com.ptithcm.tour.dto.request.PageLinkDTO;
 import com.ptithcm.tour.dto.request.TourRequestDTO;
+import com.ptithcm.tour.dto.response.MessageResponseDTO;
 import com.ptithcm.tour.dto.response.PageDataDTO;
 import com.ptithcm.tour.dto.response.TourResponseDTO;
 import com.ptithcm.tour.service.TourService;
@@ -50,5 +51,11 @@ public class TourController {
     @GetMapping("/{id}")
     public TourResponseDTO getById(@PathVariable("id") Long id) {
         return tourService.getById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "bearer")
+    public MessageResponseDTO deleteById(@PathVariable("id") Long id) {
+        return tourService.deleteTour(id);
     }
 }
