@@ -7,12 +7,10 @@ import com.ptithcm.tour.dto.response.MessageResponseDTO;
 import com.ptithcm.tour.service.TaiKhoanService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/auth")
+@CrossOrigin("*")
 @RestController
 public class AuthController {
     @Autowired
